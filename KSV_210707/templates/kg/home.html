@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <meta charset="utf-8">	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link rel="icon" href="https://static.jianshukeji.com/hcode/images/favicon.ico">
+        <!-- Bootstrap core CSS -->
+    <link href="static/css/style.css" rel="stylesheet"/>
+    <link href="static/css/jquery.jsonview.css" rel="stylesheet"/>
+    <link href="static/css/cytoscape.js-panzoom.css" rel="stylesheet" type="text/css" />
+    <link href="static/css-panzoom/font-awesome.css" rel="stylesheet" type="text/css" />
+        <!-- JS -->
+    <script src="static/js/jquery-3.4.1.min.js"></script>
+    <script src="static/js/cytoscape.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="static/js/holder.min.js"></script>
+    <script src="static/js/jquery.cookie.min.js"></script>
+    <script src="static/js/jquery-confirm.min.js"></script>
+    <script src="static/js/jquery.jsonview.js"></script>
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="static/js/cytoscape-panzoom.js"></script>
+    <script src="static/js/canvasjs.min.js"></script>
+    <script src="static/js/chart_home.js"></script>
+    <script src="static/d3/d3.js"></script>
+    <script src="static/d3/queue.js"></script>
+    <script src="https://code.highcharts.com.cn/highcharts/highcharts.js"></script>
+    <script src="https://code.highcharts.com.cn/highcharts/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com.cn/highcharts/modules/sunburst.js"></script>
+    <script src="https://code.highcharts.com.cn/highcharts/modules/sankey.js"></script>
+    <script src="https://code.highcharts.com.cn/highcharts/modules/oldie.js"></script>
+    <script src="https://code.highcharts.com.cn/highcharts/themes/sand-signika.js"></script>
+    <script src="static/js/home_chord_data.js"></script>
+
+</head>
+
+<body>
+    <table  width="1000px" style="border: #1b6d85">
+        <tr>
+            <form method="post" action="{% url 'home' %}">
+                {% csrf_token %}
+                <input name="name_title" type="text" class="form-control" placeholder=" Type one or two entity names">
+                <button type="submit" class="button">search</button>
+                </form>
+            <td>
+{#                <div style="max-width: 750px;">#}
+{#                    <p style="font-size: 14px; font-style: italic;text-align:justify; text-justify:inter-ideograph;">There are <b>4691095 entities</b> and <b>26377586 relationships</b> in this knowledge graph, which all load from <b>DBppedia</b>. You can search for one entity name to get a one-hop graph around it, or you can search for two entity names split by <b>a comma</b> to get shortest paths between them. You may start from <b>‘China’</b> and <b>‘China, Egypt’</b>. Here are overview charts.</p>#}
+{#                </div>#}
+                <div id="graph" style="height:400px;width:750px;margin: auto">
+                    <script src = "static/js/jquery.min.js" > </script>
+                    <script src = "static/js/jquery.jsonview.js" > </script>
+                    <script>
+                        $(function () {
+                            $.get('China/graph', function (result) {  //在现在的URL后加'entityname/graph' 现在调用的网址是search/entityname/graph
+                                var graph = window.graph =cytoscape({
+                                    container: document.getElementById('graph'),
+                                    ready: function(){},
+                                    style: cytoscape.stylesheet()
+                                        .selector('node[label = "Event"]').css({'background-color': '#EF8E19', "text-outline-color":'#EF8E19', 'content': 'data(name)', "text-valign" : "center",
+                                            'width': 80, 'height': 80, 'font-size':18,'color': 'white',"text-wrap": "wrap", "text-max-width": 10,'text-outline-width': 2})//节点样式
+                                        .selector('node[label = "Organisation"]').css({'background-color': '#60418F', "text-outline-color":'#60418F', 'content': 'data(name)', "text-valign" : "center",
+                                            'width': 80, 'height': 80, 'font-size':18,'color': 'white',"text-wrap": "wrap", "text-max-width": 10,'text-outline-width': 2}) //节点样式
+                                        .selector('node[label = "Others"]').css({'background-color': '#58C1DA', "text-outline-color":'#58C1DA', 'content': 'data(name)', "text-valign" : "center",
+                                            'width': 80, 'height': 80, 'font-size':18,'color': 'white',"text-wrap": "wrap", "text-max-width": 10,'text-outline-width': 2})//节点样式
+                                        .selector('node[label = "Person"]').css({'background-color': '#ED561B', "text-outline-color":'#EE2C34', 'content': 'data(name)', "text-valign" : "center", //节点样式
+                                            'width': 80, 'height': 80, 'font-size':18,'color': 'white',"text-wrap": "wrap", "text-max-width": 10,'text-outline-width': 2})
+                                        .selector('node[label = "Place"]').css({'background-color': '#43C565', "text-outline-color":'#43C565', 'content': 'data(name)', "text-valign" : "center",
+                                            'width': 80, 'height': 80, 'font-size':18,'color': 'white',"text-wrap": "wrap", "text-max-width": 10,'text-outline-width': 2})//节点样式
+                                        .selector('node[label = "Species"]').css({'background-color': '#179587', "text-outline-color":'#179587', 'content': 'data(name)', "text-valign" : "center",
+                                            'width': 80, 'height': 80, 'font-size':18,'color': 'white',"text-wrap": "wrap", "text-max-width": 10,'text-outline-width': 2})//节点样式
+                                        .selector('node[label = "TimePeriod"]').css({'background-color': '#7697DE', "text-outline-color":'#7697DE', 'content': 'data(name)', "text-valign" : "center",
+                                            'width': 80, 'height': 80, 'font-size':18,'color': 'white',"text-wrap": "wrap", "text-max-width": 10,'text-outline-width': 2})//节点样式
+                                        .selector('node[label = "Work"]').css({'background-color': '#B362A5', "text-outline-color":'#B362A5', 'content': 'data(name)', "text-valign" : "center",
+                                            'width': 80, 'height': 80, 'font-size':18,'color': 'white',"text-wrap": "wrap", "text-max-width": 10,'text-outline-width': 2})//节点样式
+                                        .selector('edge').css({
+                                            'font-size':14,
+                                            'curve-style': 'bezier',
+                                            //'target-arrow-shape': 'circle',
+                                            'line-color': '#adadad',
+                                            'target-arrow-color': '#adadad',
+                                            'content': 'data(relationship)',
+                                            'width': 2,
+                                            'edge-text-rotation': 'autorotate',
+                                        }) //边线样式
+                                        .selector(':selected').css({
+                                            'background-color': '#000000',
+                                            'line-color': '#000000',
+                                            'target-arrow-color': '#000000',
+                                            'source-arrow-color': '#000000',
+                                            "text-outline-color":'#000000',
+                                            'opacity': 1
+                                        })
+                                        .selector('.faded').css({'opacity': 0.25, 'text-opacity': 0}),
+                                    layout: {name: 'cose', fit: true},
+                                    elements: result.elements,
+                                    zoom: 1,
+                                    pan: {x: 0, y: 0}
+                                });
+
+                                graph.nodes().forEach(function (n) {
+                                    debugger
+                                    n.on('click', function (e) {
+                                        let json = e.target.data()
+                                        console.log(json)
+                                        $("#jsonview").JSONView(json);
+                                        document.getElementById("jsonview").innerHTML = document.getElementById("jsonview").innerHTML.replace(/{/, "").replace(/}/, "")
+                                        // with options
+                                        $("#json-collasped").JSONView(json, {collapsed: true});
+                                    });
+                                })
+
+                                graph.edges().forEach(function (n) {
+                                    debugger
+                                    n.on('click', function (e) {
+                                        let json = e.target.data()
+                                        console.log(json)
+                                        $("#jsonview").JSONView(json);
+                                        document.getElementById("jsonview").innerHTML = document.getElementById("jsonview").innerHTML.replace(/{/, "").replace(/}/, "")
+                                        // with options
+                                        $("#json-collasped").JSONView(json, {collapsed: true});
+                                    });
+                                })
+
+                                graph.panzoom({
+                                    // options here...
+                                });
+                            }, 'json');
+                        });
+                    </script>
+                </div>
+                <div id="graph">
+                    <div style="overflow-y: auto; height: 120px; width: 600px;margin:auto">
+                        <div id="jsonview" style="height:120px; width: 600px"></div>
+                    </div>
+                </div>
+                <br>
+                <br>
+            </td>
+            <td>
+                <p style="font-size: 15px; font-style: italic">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <div id="chartContainer2" style="height: 250px; max-width: 280px;margin:auto;"></div>
+                    <script src="https://code.highcharts.com.cn/highcharts/modules/dependency-wheel.js"></script>
+                    <script src="static/js/home_chord_chart.js"></script>
+{#                <br>#}
+{#                <br>#}
+                <div id="chartContainer1" style="max-width: 330px;margin:auto;">
+                    <script src="static/js/home_sun_data.js"></script>
+                    <script src="static/js/home_sun_chart.js"></script>
+                </div>
+            </td>
+        </tr>
+    </table>
+{#<div style="align: center">#}
+{#    <img src="static/label.jpg" style="size: 300px" align="middle">#}
+{#</div>#}
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Sequences sunburst</title>
+    <!-- 引入v4版本的d3.js库-->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <!--引入google的一种字体样式 -->
+    <link rel="stylesheet" type="text/css"
+      href="https://fonts.googleapis.com/css?family=Open+Sans:400,600">
+    <!--引进样式文件 -->
+    <link rel="stylesheet" type="text/css" href="sequences.css"/>
+  </head>
+  <body>
+    <div id="main">
+      <!-- 定义左上角页面访问序列的容器 -->
+      <div id="sequence"></div>
+      <!-- 定义光芒图的容器 -->
+      <div id="chart">
+        <!-- 定义鼠标悬停时，解释说明文字所在的容器 ,默认隐藏-->
+        <div id="explanation" style="visibility: hidden;">
+          <span id="percentage"></span><br/>
+          of visits begin with this sequence of pages
+        </div>
+      </div>
+    </div>
+    <!--定义图例所在容器 .以及切换是否显示的按钮-->
+    <div id="sidebar">
+      <input type="checkbox" id="togglelegend"> Legend<br/>
+      <div id="legend" style="visibility: hidden;"></div>
+    </div>
+    <!--sequences.js文件中实现光芒图各种细节 -->
+    <script type="text/javascript" src="static/js/sequences.js"></script>
+    <script type="text/javascript">
+      // Hack to make this example display correctly in an iframe on bl.ocks.org
+      d3.select(self.frameElement).style("height", "700px");
+  </script>
+  </body>
+</html>
